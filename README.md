@@ -44,14 +44,18 @@ Add your email credentials as secrets in your forked repository:
      Value: Email address where you want to receive notifications
 
 ### 4. Customize Your Search
-Edit `arxiv_paper_notifier.py` to modify your search preferences:
+Edit `config.yml` to modify your search preferences:
 
-```python
-# Configuration section in main()
-PRIMARY_KEYWORD = 'neutrino'  # Change this to your main keyword
-OPTIONAL_KEYWORDS = ['oscillation', 'interaction']  # Add related keywords
-CATEGORIES = ['hep-ex', 'hep-ph']  # Change to your preferred categories
-DAYS_BACK = 7  # Adjust the number of days to look back
+```yaml
+search:
+  primary_keyword: "neutrino"
+  optional_keywords:
+    - "oscillation"
+    - "interaction"
+  categories:
+    - "hep-ex"
+    - "hep-ph"
+  days_back: 7
 ```
 
 Common arXiv categories:
@@ -88,7 +92,7 @@ Common arXiv categories:
 - Wrong papers?
 
     - Adjust your keywords and categories
-    - Modify the search criteria in the script
+    - Modify the search criteria in the configuration file
 
 ## Support
 
