@@ -1,9 +1,21 @@
 import os
+import yaml
 from arxiv import Client, Search, SortCriterion
 from datetime import datetime, timedelta
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+
+def load_config(config_path='config.yml'):
+    """
+    Load search parameters from YAML configuration file.
+    
+    :param config_path: Path to the YAML config file
+    :return: Dictionary with configuration parameters
+    """
+    with open(config_path, 'r') as file:
+        config = yaml.safe_load(file)
+    return config['search']
 
 def search_arxiv_papers(primary_keyword, optional_keywords, categories=None, days=7, n_buffer=100):
     """
@@ -103,23 +115,28 @@ def send_email(sender_email, sender_password, recipient_email, papers):
 
 def main():
 
-    # Configuration - replace with your own values
-    PRIMARY_KEYWORD = 'neutrino'
-    OPTIONAL_KEYWORDS = ['oscillation', 'interaction', 'detection', 'machine learning']
-    CATEGORIES = ['hep-ex', 'hep-ph', 'nucl-ex', 'nucl-th']
-    DAYS_BACK = 7
+    # Load configuration
+    try:
+        config = load_config()
+    except Exception as e:
+        print(f"Error loading configuration: {e}")
+        return
 
-    # Configuration using environment variables
+    # Get email credentials from environment variables
     SENDER_EMAIL = os.environ.get('SENDER_EMAIL')
     SENDER_PASSWORD = os.environ.get('SENDER_PASSWORD')
     RECIPIENT_EMAIL = os.environ.get('RECIPIENT_EMAIL')
+
+    if not all([SENDER_EMAIL, SENDER_PASSWORD, RECIPIENT_EMAIL]):
+        print("Missing required email credentials in environment variables")
+        return
     
-    # Search for papers
+    # Search for papers using configuration
     papers = search_arxiv_papers(
-        PRIMARY_KEYWORD, 
-        optional_keywords=OPTIONAL_KEYWORDS, 
-        categories=CATEGORIES, 
-        days=DAYS_BACK
+        primary_keyword=config['primary_keyword'],
+        optional_keywords=config['optional_keywords'],
+        categories=config['categories'],
+        days=config['days_back']
     )
     
     # Send email if papers found

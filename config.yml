@@ -1,0 +1,14 @@
+# ArXiv search parameters
+search:
+  primary_keyword: "neutrino"
+  optional_keywords:
+    - "oscillation"
+    - "interaction"
+    - "detection"
+    - "machine learning"
+  categories:
+    - "hep-ex"
+    - "hep-ph"
+    - "nucl-ex"
+    - "nucl-th"
+  days_back: 7
